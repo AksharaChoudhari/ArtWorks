@@ -15,10 +15,19 @@ body {
 
 /* Header */
 header {
+  position: fixed;              /* makes it stay on scroll */
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 1000;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 25px 8%;
+  padding: 20px 8%;
+
+  background: rgba(250, 246, 242, 0.9);  /* soft transparent */
+  backdrop-filter: blur(10px);           /* glass effect */
   border-bottom: 1px solid #e8e0d8;
 }
 
@@ -48,8 +57,9 @@ nav a:hover {
 
 /* Hero */
 .hero {
-  padding: 120px 20px 80px;
+  padding: 160px 20px 80px;
   text-align: center;
+  
 }
 
 .hero h1 {
