@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Sketches — Creative Works</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1a1410;
+      --surface: #231c16;
+      --surface2: #2e2520;
+      --border: rgba(196,144,122,0.15);
+      --rose: #c4907a;
+      --rose-light: #d4a090;
+      --cream: #faf7f2;
+      --parchment: #ede4d8;
+      --light: #8a7060;
+      --mid: #6a5448;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--bg);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--cream);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.5;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 8%;
+      background: rgba(26,20,16,0.88);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.4s ease;
+    }
+    header.scrolled { padding: 16px 8%; }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 400;
+      text-decoration: none;
+      color: var(--cream);
+    }
+    .logo span { color: var(--rose); }
+
+    nav { display: flex; gap: 32px; align-items: center; }
+    nav a {
+      text-decoration: none;
+      color: var(--light);
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 400;
+      position: relative;
+      transition: color 0.3s;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--rose);
+      transition: width 0.35s ease;
+    }
+    nav a:hover { color: var(--cream); }
+    nav a:hover::after { width: 100%; }
+    nav a.active { color: var(--rose); }
+    nav a.active::after { width: 100%; }
+
+    /* PAGE HERO */
+    .page-hero {
+      min-height: 55vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 140px 8% 70px;
+      background: linear-gradient(160deg, var(--bg) 0%, var(--surface) 70%, #32221a 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-orb {
+      position: absolute;
+      top: -100px; right: -100px;
+      width: 500px; height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(196,144,122,0.12) 0%, transparent 70%);
+      pointer-events: none;
+    }
+
+    .hero-lines {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 200px;
+      background: repeating-linear-gradient(
+        0deg,
+        transparent,
+        transparent 39px,
+        rgba(196,144,122,0.04) 40px
+      );
+      pointer-events: none;
+    }
+
+    .page-hero-ghost {
+      position: absolute;
+      right: -30px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(140px, 18vw, 260px);
+      font-weight: 600;
+      font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(196,144,122,0.12);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .page-hero-accent {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(to right, transparent, var(--rose), transparent);
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: up 0.7s ease 0.1s forwards;
+    }
+    .breadcrumb a { color: var(--mid); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--rose); }
+    .breadcrumb-sep { color: var(--rose); }
+
+    .page-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(60px, 9vw, 120px);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 0.9;
+      color: var(--cream);
+      opacity: 0;
+      animation: up 0.9s ease 0.2s forwards;
+    }
+
+    .page-hero h1 em {
+      color: var(--rose);
+      font-style: normal;
+    }
+
+    .page-hero-meta {
+      margin-top: 28px;
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      opacity: 0;
+      animation: up 0.9s ease 0.4s forwards;
+    }
+
+    .page-hero-count {
+      font-size: 13px;
+      color: var(--light);
+      letter-spacing: 1px;
+    }
+    .page-hero-count strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-style: italic;
+      color: var(--rose);
+    }
+
+    .meta-divider { width: 1px; height: 20px; background: var(--border); }
+
+    /* GALLERY */
+    .gallery-section {
+      padding: 80px 8% 120px;
+    }
+
+    /* Grid layout — alternating sizes for editorial feel */
+    .sketch-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+
+    .sk {
+      position: relative;
+      overflow: hidden;
+      border-radius: 4px;
+      cursor: pointer;
+      background: var(--surface);
+      opacity: 0;
+      transform: translateY(16px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .sk.visible { opacity: 1; transform: none; }
+
+    /* Layout pattern — editorial grid spans */
+    .sk:nth-child(1)  { grid-column: span 5; grid-row: span 2; }
+    .sk:nth-child(2)  { grid-column: span 7; }
+    .sk:nth-child(3)  { grid-column: span 4; }
+    .sk:nth-child(4)  { grid-column: span 3; }
+    .sk:nth-child(5)  { grid-column: span 4; }
+    .sk:nth-child(6)  { grid-column: span 8; grid-row: span 2; }
+    .sk:nth-child(7)  { grid-column: span 4; }
+    .sk:nth-child(8)  { grid-column: span 4; grid-row: span 2; }
+    .sk:nth-child(9)  { grid-column: span 4; }
+    .sk:nth-child(10) { grid-column: span 4; }
+    .sk:nth-child(11) { grid-column: span 5; }
+    .sk:nth-child(12) { grid-column: span 7; grid-row: span 2; }
+    .sk:nth-child(13) { grid-column: span 5; }
+    .sk:nth-child(14) { grid-column: span 6; }
+    .sk:nth-child(15) { grid-column: span 6; }
+    .sk:nth-child(16) { grid-column: span 6; }
+
+    .sk img {
+      width: 100%;
+      height: 100%;
+      min-height: 220px;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+
+    .sk:hover img { transform: scale(1.06); }
+
+    .sk-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(26,20,16,0.8) 0%, rgba(26,20,16,0.1) 60%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+    }
+
+    .sk:hover .sk-overlay { opacity: 1; }
+
+    .sk-label {
+      color: white;
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      transform: translateY(8px);
+      transition: transform 0.4s ease;
+    }
+    .sk:hover .sk-label { transform: translateY(0); }
+
+    .sk-num {
+      position: absolute;
+      top: 14px; left: 14px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 13px;
+      font-style: italic;
+      color: rgba(255,255,255,0.3);
+      opacity: 0;
+      transition: opacity 0.4s;
+    }
+    .sk:hover .sk-num { opacity: 1; }
+
+    .sk-zoom {
+      position: absolute;
+      top: 14px; right: 14px;
+      width: 34px; height: 34px;
+      background: rgba(196,144,122,0.15);
+      border: 1px solid rgba(196,144,122,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--rose-light);
+      font-size: 13px;
+      opacity: 0;
+      transform: scale(0.7);
+      transition: all 0.35s ease;
+    }
+    .sk:hover .sk-zoom { opacity: 1; transform: scale(1); }
+
+    /* LIGHTBOX */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(10,7,5,0.97);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(12px);
+      padding: 40px;
+    }
+    .lightbox.open { display: flex; }
+
+    .lb-inner {
+      position: relative;
+      max-width: 88vw;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .lb-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .lb-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+    }
+
+    .lb-close {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.3);
+      cursor: pointer;
+      transition: color 0.2s;
+      background: none;
+      border: none;
+    }
+    .lb-close:hover { color: white; }
+
+    .lb-image {
+      max-width: 100%;
+      max-height: 78vh;
+      border-radius: 4px;
+      animation: lbIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+      box-shadow: 0 30px 100px rgba(0,0,0,0.8);
+    }
+
+    .lb-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(196,144,122,0.1);
+      border: 1px solid rgba(196,144,122,0.2);
+      color: var(--rose);
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 22px;
+      transition: all 0.25s;
+    }
+    .lb-nav:hover { background: var(--rose); border-color: var(--rose); color: white; }
+    .lb-prev { left: 24px; }
+    .lb-next { right: 24px; }
+
+    @keyframes lbIn {
+      from { opacity: 0; transform: scale(0.88) translateY(20px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* BACK LINK */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 60px 8% 0;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--mid);
+      transition: color 0.3s;
+    }
+    .back-link:hover { color: var(--rose); }
+    .back-link::before { content: '←'; font-size: 16px; }
+
+    /* FOOTER */
+    footer {
+      background: var(--surface);
+      padding: 28px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid var(--border);
+    }
+    footer p { font-size: 11px; letter-spacing: 2px; color: var(--mid); text-transform: uppercase; }
+    .foot-nav { display: flex; gap: 24px; }
+    .foot-nav a { text-decoration: none; font-size: 10px; color: var(--mid); letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; }
+    .foot-nav a:hover { color: var(--rose); }
+
+    @keyframes up {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 900px) {
+      .sketch-grid { grid-template-columns: repeat(6, 1fr); }
+      .sk { grid-column: span 3 !important; grid-row: span 1 !important; }
+    }
+
+    @media (max-width: 600px) {
+      .sketch-grid { grid-template-columns: 1fr 1fr; }
+      .sk { grid-column: span 1 !important; }
+      header { padding: 18px 5%; }
+      .page-hero { padding: 120px 5% 60px; }
+      .gallery-section { padding: 60px 5% 90px; }
+      .lb-nav { display: none; }
+      footer { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="hdr">
+  <a class="logo" href="index.html">Creative <span>Works</span></a>
+  <nav>
+    <a href="drawings.html">Drawings</a>
+    <a href="sketches.html" class="active">Sketches</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="hero-orb"></div>
+  <div class="hero-lines"></div>
+  <div class="page-hero-ghost">Sketch</div>
+  <div class="page-hero-accent"></div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span class="breadcrumb-sep">→</span>
+    <span>Sketches</span>
+  </div>
+
+  <h1>Sketches<br><em>&amp; lines.</em></h1>
+
+  <div class="page-hero-meta">
+    <div class="page-hero-count"><strong>16</strong> pieces</div>
+    <div class="meta-divider"></div>
+    <div style="font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--mid);">Raw · Expressive</div>
+  </div>
+</section>
+
+<a href="index.html" class="back-link">Back to Home</a>
+
+<section class="gallery-section">
+  <div class="sketch-grid" id="grid">
+    <div class="sk"><img src="images/sketch1.jpg" alt="Sketch 1"><div class="sk-overlay"><div class="sk-label">Sketch 01</div></div><div class="sk-num">01</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch2.jpg" alt="Sketch 2"><div class="sk-overlay"><div class="sk-label">Sketch 02</div></div><div class="sk-num">02</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch3.jpg" alt="Sketch 3"><div class="sk-overlay"><div class="sk-label">Sketch 03</div></div><div class="sk-num">03</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch4.jpg" alt="Sketch 4"><div class="sk-overlay"><div class="sk-label">Sketch 04</div></div><div class="sk-num">04</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch5.jpg" alt="Sketch 5"><div class="sk-overlay"><div class="sk-label">Sketch 05</div></div><div class="sk-num">05</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch6.jpg" alt="Sketch 6"><div class="sk-overlay"><div class="sk-label">Sketch 06</div></div><div class="sk-num">06</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch7.jpg" alt="Sketch 7"><div class="sk-overlay"><div class="sk-label">Sketch 07</div></div><div class="sk-num">07</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch8.jpg" alt="Sketch 8"><div class="sk-overlay"><div class="sk-label">Sketch 08</div></div><div class="sk-num">08</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch9.jpg" alt="Sketch 9"><div class="sk-overlay"><div class="sk-label">Sketch 09</div></div><div class="sk-num">09</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch10.jpg" alt="Sketch 10"><div class="sk-overlay"><div class="sk-label">Sketch 10</div></div><div class="sk-num">10</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch11.jpg" alt="Sketch 11"><div class="sk-overlay"><div class="sk-label">Sketch 11</div></div><div class="sk-num">11</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch12.jpg" alt="Sketch 12"><div class="sk-overlay"><div class="sk-label">Sketch 12</div></div><div class="sk-num">12</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch13.jpg" alt="Sketch 13"><div class="sk-overlay"><div class="sk-label">Sketch 13</div></div><div class="sk-num">13</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch14.jpg" alt="Sketch 14"><div class="sk-overlay"><div class="sk-label">Sketch 14</div></div><div class="sk-num">14</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch15.jpg" alt="Sketch 15"><div class="sk-overlay"><div class="sk-label">Sketch 15</div></div><div class="sk-num">15</div><div class="sk-zoom">⤡</div></div>
+    <div class="sk"><img src="images/sketch16.jpg" alt="Sketch 16"><div class="sk-overlay"><div class="sk-label">Sketch 16</div></div><div class="sk-num">16</div><div class="sk-zoom">⤡</div></div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-nav lb-prev" id="lb-prev">‹</button>
+  <div class="lb-inner">
+    <div class="lb-toolbar">
+      <span class="lb-label" id="lb-label">Sketch 01</span>
+      <button class="lb-close" id="lb-close">✕ Close</button>
+    </div>
+    <img class="lb-image" id="lb-img" src="" alt="">
+  </div>
+  <button class="lb-nav lb-next" id="lb-next">›</button>
+</div>
+
+<footer>
+  <p>© 2026 Creative Works — Akshara</p>
+  <nav class="foot-nav">
+    <a href="index.html">Home</a>
+    <a href="drawings.html">Drawings</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</footer>
+
+<script>
+  const hdr = document.getElementById('hdr');
+  window.addEventListener('scroll', () => hdr.classList.toggle('scrolled', window.scrollY > 50));
+
+  const items = document.querySelectorAll('.sk');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const i = Array.from(items).indexOf(entry.target);
+        setTimeout(() => entry.target.classList.add('visible'), 50 * (i % 8));
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.05 });
+  items.forEach(i => io.observe(i));
+
+  // Lightbox
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  const lbLabel = document.getElementById('lb-label');
+  let currentIndex = 0;
+  const allItems = Array.from(items);
+
+  function openLightbox(index) {
+    currentIndex = index;
+    const img = allItems[index].querySelector('img');
+    lbImg.src = img.src;
+    lbImg.alt = img.alt;
+    lbLabel.textContent = allItems[index].querySelector('.sk-label').textContent;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  allItems.forEach((item, i) => item.addEventListener('click', () => openLightbox(i)));
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+  document.getElementById('lb-prev').addEventListener('click', (e) => {
+    e.stopPropagation();
+    openLightbox((currentIndex - 1 + allItems.length) % allItems.length);
+  });
+  document.getElementById('lb-next').addEventListener('click', (e) => {
+    e.stopPropagation();
+    openLightbox((currentIndex + 1) % allItems.length);
+  });
+  document.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') openLightbox((currentIndex - 1 + allItems.length) % allItems.length);
+    if (e.key === 'ArrowRight') openLightbox((currentIndex + 1) % allItems.length);
+  });
+</script>
+</body>
+</html>

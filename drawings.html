@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Drawings — Creative Works</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #faf7f2;
+      --warm: #f5efe6;
+      --parchment: #ede4d8;
+      --blush: #e8d5c4;
+      --rose: #c4907a;
+      --deep: #2c2018;
+      --mid: #7a6455;
+      --light: #b5a396;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--deep);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.35;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 8%;
+      background: rgba(250,247,242,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(196,144,122,0.12);
+      transition: padding 0.4s ease;
+    }
+    header.scrolled { padding: 16px 8%; }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 400;
+      text-decoration: none;
+      color: var(--deep);
+    }
+    .logo span { color: var(--rose); }
+
+    nav { display: flex; gap: 32px; align-items: center; }
+    nav a {
+      text-decoration: none;
+      color: var(--mid);
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 400;
+      position: relative;
+      transition: color 0.3s;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--rose);
+      transition: width 0.35s ease;
+    }
+    nav a:hover { color: var(--deep); }
+    nav a:hover::after { width: 100%; }
+    nav a.active { color: var(--rose); }
+    nav a.active::after { width: 100%; }
+
+    /* PAGE HERO */
+    .page-hero {
+      min-height: 52vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 130px 8% 70px;
+      background: linear-gradient(160deg, var(--cream) 0%, var(--warm) 60%, var(--parchment) 100%);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-hero-ghost {
+      position: absolute;
+      right: -40px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(160px, 20vw, 300px);
+      font-weight: 600;
+      font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(196,144,122,0.1);
+      pointer-events: none;
+      user-select: none;
+      white-space: nowrap;
+    }
+
+    .page-hero-accent {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(to right, var(--rose), var(--blush), transparent);
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--light);
+      margin-bottom: 24px;
+      opacity: 0;
+      animation: up 0.7s ease 0.1s forwards;
+    }
+    .breadcrumb a { color: var(--light); text-decoration: none; transition: color 0.2s; }
+    .breadcrumb a:hover { color: var(--rose); }
+    .breadcrumb-sep { color: var(--rose); }
+
+    .page-hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(60px, 9vw, 120px);
+      font-weight: 300;
+      font-style: italic;
+      line-height: 0.9;
+      color: var(--deep);
+      opacity: 0;
+      animation: up 0.9s ease 0.2s forwards;
+    }
+
+    .page-hero-meta {
+      margin-top: 24px;
+      display: flex;
+      align-items: center;
+      gap: 30px;
+      opacity: 0;
+      animation: up 0.9s ease 0.4s forwards;
+    }
+
+    .page-hero-count {
+      font-size: 13px;
+      color: var(--mid);
+      letter-spacing: 1px;
+    }
+    .page-hero-count strong {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 22px;
+      font-style: italic;
+      color: var(--rose);
+    }
+
+    .meta-divider { width: 1px; height: 20px; background: var(--blush); }
+
+    .filter-btns {
+      display: flex;
+      gap: 10px;
+    }
+
+    .filter-btn {
+      padding: 6px 16px;
+      border: 1px solid var(--blush);
+      border-radius: 20px;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--mid);
+      cursor: pointer;
+      background: transparent;
+      transition: all 0.25s;
+    }
+    .filter-btn.active, .filter-btn:hover {
+      background: var(--rose);
+      border-color: var(--rose);
+      color: white;
+    }
+
+    /* GALLERY */
+    .gallery-section {
+      padding: 80px 8% 120px;
+    }
+
+    .masonry {
+      column-count: 3;
+      column-gap: 20px;
+    }
+
+    .masonry-item {
+      break-inside: avoid;
+      margin-bottom: 20px;
+      position: relative;
+      border-radius: 5px;
+      overflow: hidden;
+      cursor: pointer;
+      background: var(--parchment);
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .masonry-item.visible { opacity: 1; transform: none; }
+
+    .masonry-item img {
+      width: 100%;
+      height: auto;
+      display: block;
+      transition: transform 0.65s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+
+    .masonry-item:hover img { transform: scale(1.06); }
+
+    .item-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(44,32,24,0.65) 0%, rgba(44,32,24,0.08) 55%, transparent 100%);
+      opacity: 0;
+      transition: opacity 0.4s ease;
+      display: flex;
+      flex-direction: column;
+      justify-content: flex-end;
+      padding: 20px;
+    }
+
+    .masonry-item:hover .item-overlay { opacity: 1; }
+
+    .item-label {
+      color: white;
+      font-size: 10px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      transform: translateY(8px);
+      transition: transform 0.4s ease;
+    }
+
+    .masonry-item:hover .item-label { transform: translateY(0); }
+
+    .item-zoom {
+      position: absolute;
+      top: 16px; right: 16px;
+      width: 36px; height: 36px;
+      background: rgba(255,255,255,0.15);
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 14px;
+      opacity: 0;
+      transform: scale(0.8);
+      transition: all 0.35s ease;
+      backdrop-filter: blur(4px);
+    }
+
+    .masonry-item:hover .item-zoom {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    /* LIGHTBOX */
+    .lightbox {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(20,14,10,0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      backdrop-filter: blur(8px);
+      padding: 40px;
+    }
+
+    .lightbox.open { display: flex; }
+
+    .lb-inner {
+      position: relative;
+      max-width: 88vw;
+      max-height: 88vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .lb-toolbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      width: 100%;
+      margin-bottom: 16px;
+    }
+
+    .lb-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+    }
+
+    .lb-close {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.4);
+      cursor: pointer;
+      transition: color 0.2s;
+      background: none;
+      border: none;
+    }
+    .lb-close:hover { color: white; }
+
+    .lb-image {
+      max-width: 100%;
+      max-height: 78vh;
+      border-radius: 4px;
+      animation: lbIn 0.4s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
+      box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    }
+
+    .lb-nav {
+      position: fixed;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,255,255,0.15);
+      color: white;
+      width: 48px; height: 48px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 20px;
+      transition: all 0.25s;
+      backdrop-filter: blur(4px);
+    }
+    .lb-nav:hover { background: var(--rose); border-color: var(--rose); }
+    .lb-prev { left: 24px; }
+    .lb-next { right: 24px; }
+
+    @keyframes lbIn {
+      from { opacity: 0; transform: scale(0.9) translateY(16px); }
+      to { opacity: 1; transform: scale(1) translateY(0); }
+    }
+
+    /* BACK LINK */
+    .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 60px 8% 0;
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--light);
+      transition: color 0.3s;
+    }
+    .back-link:hover { color: var(--rose); }
+    .back-link::before { content: '←'; font-size: 16px; }
+
+    /* FOOTER */
+    footer {
+      background: var(--deep);
+      padding: 28px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-top: 1px solid rgba(196,144,122,0.1);
+    }
+    footer p { font-size: 11px; letter-spacing: 2px; color: var(--mid); text-transform: uppercase; }
+    .foot-nav { display: flex; gap: 24px; }
+    .foot-nav a { text-decoration: none; font-size: 10px; color: var(--mid); letter-spacing: 2px; text-transform: uppercase; transition: color 0.2s; }
+    .foot-nav a:hover { color: var(--rose); }
+
+    @keyframes up {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    @media (max-width: 900px) { .masonry { column-count: 2; } }
+    @media (max-width: 600px) {
+      .masonry { column-count: 1; }
+      header { padding: 18px 5%; }
+      .page-hero { padding: 120px 5% 60px; }
+      .gallery-section { padding: 60px 5% 90px; }
+      .lb-nav { display: none; }
+      footer { flex-direction: column; gap: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="hdr">
+  <a class="logo" href="index.html">Creative <span>Works</span></a>
+  <nav>
+    <a href="drawings.html" class="active">Drawings</a>
+    <a href="sketches.html">Sketches</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="page-hero">
+  <div class="page-hero-ghost">Draw</div>
+  <div class="page-hero-accent"></div>
+
+  <div class="breadcrumb">
+    <a href="index.html">Home</a>
+    <span class="breadcrumb-sep">→</span>
+    <span>Drawings</span>
+  </div>
+
+  <h1>Drawings</h1>
+
+  <div class="page-hero-meta">
+    <div class="page-hero-count"><strong>19</strong> pieces</div>
+    <div class="meta-divider"></div>
+    <div class="filter-btns">
+      <button class="filter-btn active">All</button>
+    </div>
+  </div>
+</section>
+
+<a href="index.html" class="back-link">Back to Home</a>
+
+<section class="gallery-section">
+  <div class="masonry" id="grid">
+    <div class="masonry-item"><img src="images/drawing1.jpg" alt="Drawing 1"><div class="item-overlay"><div class="item-label">Drawing 01</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing2.jpg" alt="Drawing 2"><div class="item-overlay"><div class="item-label">Drawing 02</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing3.jpg" alt="Drawing 3"><div class="item-overlay"><div class="item-label">Drawing 03</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing4.jpg" alt="Drawing 4"><div class="item-overlay"><div class="item-label">Drawing 04</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing5.jpg" alt="Drawing 5"><div class="item-overlay"><div class="item-label">Drawing 05</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing6.jpg" alt="Drawing 6"><div class="item-overlay"><div class="item-label">Drawing 06</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing7.jpg" alt="Drawing 7"><div class="item-overlay"><div class="item-label">Drawing 07</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing8.jpg" alt="Drawing 8"><div class="item-overlay"><div class="item-label">Drawing 08</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing9.jpg" alt="Drawing 9"><div class="item-overlay"><div class="item-label">Drawing 09</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing10.jpg" alt="Drawing 10"><div class="item-overlay"><div class="item-label">Drawing 10</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing11.jpg" alt="Drawing 11"><div class="item-overlay"><div class="item-label">Drawing 11</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing12.jpg" alt="Drawing 12"><div class="item-overlay"><div class="item-label">Drawing 12</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing13.jpg" alt="Drawing 13"><div class="item-overlay"><div class="item-label">Drawing 13</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing14.jpg" alt="Drawing 14"><div class="item-overlay"><div class="item-label">Drawing 14</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing15.jpg" alt="Drawing 15"><div class="item-overlay"><div class="item-label">Drawing 15</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing16.jpg" alt="Drawing 16"><div class="item-overlay"><div class="item-label">Drawing 16</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing17.jpg" alt="Drawing 17"><div class="item-overlay"><div class="item-label">Drawing 17</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing18.jpg" alt="Drawing 18"><div class="item-overlay"><div class="item-label">Drawing 18</div></div><div class="item-zoom">⤡</div></div>
+    <div class="masonry-item"><img src="images/drawing19.jpg" alt="Drawing 19"><div class="item-overlay"><div class="item-label">Drawing 19</div></div><div class="item-zoom">⤡</div></div>
+  </div>
+</section>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-nav lb-prev" id="lb-prev">‹</button>
+  <div class="lb-inner">
+    <div class="lb-toolbar">
+      <span class="lb-label" id="lb-label">Drawing 01</span>
+      <button class="lb-close" id="lb-close">✕ Close</button>
+    </div>
+    <img class="lb-image" id="lb-img" src="" alt="">
+  </div>
+  <button class="lb-nav lb-next" id="lb-next">›</button>
+</div>
+
+<footer>
+  <p>© 2026 Creative Works — Akshara</p>
+  <nav class="foot-nav">
+    <a href="index.html">Home</a>
+    <a href="sketches.html">Sketches</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</footer>
+
+<script>
+  // Header shrink
+  const hdr = document.getElementById('hdr');
+  window.addEventListener('scroll', () => hdr.classList.toggle('scrolled', window.scrollY > 50));
+
+  // Scroll reveal for masonry items
+  const items = document.querySelectorAll('.masonry-item');
+  const io = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        setTimeout(() => entry.target.classList.add('visible'), 60 * (Array.from(items).indexOf(entry.target) % 6));
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.1 });
+  items.forEach(item => io.observe(item));
+
+  // Lightbox
+  const lb = document.getElementById('lightbox');
+  const lbImg = document.getElementById('lb-img');
+  const lbLabel = document.getElementById('lb-label');
+  let currentIndex = 0;
+  const allItems = Array.from(items);
+
+  function openLightbox(index) {
+    currentIndex = index;
+    const img = allItems[index].querySelector('img');
+    lbImg.src = img.src;
+    lbImg.alt = img.alt;
+    lbLabel.textContent = allItems[index].querySelector('.item-label').textContent;
+    lb.classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeLightbox() {
+    lb.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  allItems.forEach((item, i) => {
+    item.addEventListener('click', () => openLightbox(i));
+  });
+
+  document.getElementById('lb-close').addEventListener('click', closeLightbox);
+  lb.addEventListener('click', (e) => { if (e.target === lb) closeLightbox(); });
+
+  document.getElementById('lb-prev').addEventListener('click', (e) => {
+    e.stopPropagation();
+    openLightbox((currentIndex - 1 + allItems.length) % allItems.length);
+  });
+
+  document.getElementById('lb-next').addEventListener('click', (e) => {
+    e.stopPropagation();
+    openLightbox((currentIndex + 1) % allItems.length);
+  });
+
+  document.addEventListener('keydown', (e) => {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') closeLightbox();
+    if (e.key === 'ArrowLeft') openLightbox((currentIndex - 1 + allItems.length) % allItems.length);
+    if (e.key === 'ArrowRight') openLightbox((currentIndex + 1) % allItems.length);
+  });
+</script>
+</body>
+</html>

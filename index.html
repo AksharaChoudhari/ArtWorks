@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Creative Works — Akshara</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --cream: #faf7f2;
+      --warm: #f5efe6;
+      --parchment: #ede4d8;
+      --blush: #e8d5c4;
+      --rose: #c4907a;
+      --deep: #2c2018;
+      --mid: #7a6455;
+      --light: #b5a396;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--cream);
+      font-family: 'DM Sans', sans-serif;
+      color: var(--deep);
+      overflow-x: hidden;
+    }
+
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 1000;
+      opacity: 0.35;
+    }
+
+    /* HEADER */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 200;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 24px 8%;
+      background: rgba(250,247,242,0.85);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(196,144,122,0.12);
+      transition: padding 0.4s ease;
+    }
+
+    header.scrolled { padding: 16px 8%; }
+
+    .logo {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 19px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      font-weight: 400;
+    }
+    .logo span { color: var(--rose); }
+
+    nav { display: flex; gap: 32px; align-items: center; }
+
+    nav a {
+      text-decoration: none;
+      color: var(--mid);
+      font-size: 11px;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 400;
+      position: relative;
+      transition: color 0.3s;
+    }
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -3px; left: 0;
+      width: 0; height: 1px;
+      background: var(--rose);
+      transition: width 0.35s ease;
+    }
+    nav a:hover { color: var(--deep); }
+    nav a:hover::after { width: 100%; }
+
+    /* HERO */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 120px 8% 80px;
+      gap: 60px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 70% 50%, rgba(196,144,122,0.08) 0%, transparent 65%);
+      pointer-events: none;
+    }
+
+    .hero-ghost {
+      position: absolute;
+      right: -60px;
+      bottom: -80px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 280px;
+      font-weight: 600;
+      font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(196,144,122,0.09);
+      pointer-events: none;
+      user-select: none;
+      line-height: 1;
+    }
+
+    .hero-left { position: relative; z-index: 2; }
+
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--rose);
+      margin-bottom: 28px;
+      opacity: 0;
+      animation: up 0.8s ease 0.2s forwards;
+    }
+    .hero-tag::before {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: var(--rose);
+    }
+
+    .hero h1 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(56px, 6vw, 96px);
+      font-weight: 300;
+      line-height: 1.0;
+      color: var(--deep);
+      opacity: 0;
+      animation: up 0.9s ease 0.4s forwards;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--rose);
+      display: block;
+    }
+
+    .hero-desc {
+      margin-top: 28px;
+      font-size: 15px;
+      color: var(--mid);
+      line-height: 1.8;
+      max-width: 380px;
+      opacity: 0;
+      animation: up 0.9s ease 0.6s forwards;
+    }
+
+    .hero-ctas {
+      margin-top: 48px;
+      display: flex;
+      gap: 16px;
+      opacity: 0;
+      animation: up 0.9s ease 0.8s forwards;
+    }
+
+    .btn-primary {
+      display: inline-block;
+      padding: 14px 36px;
+      background: var(--deep);
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background 0.3s, transform 0.3s;
+    }
+    .btn-primary:hover {
+      background: var(--rose);
+      transform: translateY(-2px);
+    }
+
+    .btn-ghost {
+      display: inline-block;
+      padding: 14px 36px;
+      border: 1px solid var(--blush);
+      color: var(--mid);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: all 0.3s;
+    }
+    .btn-ghost:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+      transform: translateY(-2px);
+    }
+
+    .hero-right {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      opacity: 0;
+      animation: fadeIn 1.2s ease 0.6s forwards;
+    }
+
+    .hero-images {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      grid-template-rows: auto auto;
+      gap: 14px;
+    }
+
+    .hero-img-card {
+      overflow: hidden;
+      border-radius: 4px;
+      position: relative;
+    }
+
+    .hero-img-card:first-child {
+      grid-row: span 2;
+    }
+
+    .hero-img-card img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+      transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+
+    .hero-img-card:hover img { transform: scale(1.06); }
+
+    /* STATS BAR */
+    .stats-bar {
+      padding: 50px 8%;
+      background: var(--deep);
+      display: flex;
+      justify-content: center;
+      gap: 80px;
+    }
+
+    .stat { text-align: center; }
+    .stat-num {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 48px;
+      font-weight: 300;
+      color: var(--cream);
+      font-style: italic;
+      line-height: 1;
+    }
+    .stat-label {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--mid);
+      margin-top: 8px;
+    }
+    .stat-divider {
+      width: 1px;
+      background: rgba(196,144,122,0.2);
+    }
+
+    /* GALLERY PREVIEW CARDS */
+    .works-section {
+      padding: 130px 8%;
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.9s ease;
+    }
+    .works-section.show { opacity: 1; transform: none; }
+
+    .section-tag {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      margin-bottom: 60px;
+    }
+    .section-tag span {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--rose);
+    }
+    .section-tag h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 300;
+      font-style: italic;
+    }
+    .tag-line {
+      flex: 1;
+      height: 1px;
+      background: linear-gradient(to right, var(--blush), transparent);
+    }
+
+    .works-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 30px;
+    }
+
+    .work-card {
+      text-decoration: none;
+      color: inherit;
+      display: block;
+      position: relative;
+      border-radius: 6px;
+      overflow: hidden;
+      aspect-ratio: 4/3;
+      group: true;
+    }
+
+    .work-card-bg {
+      position: absolute;
+      inset: 0;
+      transition: transform 0.7s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+
+    .work-card:hover .work-card-bg { transform: scale(1.05); }
+
+    .work-card-drawings .work-card-bg {
+      background: linear-gradient(135deg, #c4907a 0%, #e8d5c4 50%, #f5efe6 100%);
+    }
+
+    .work-card-sketches .work-card-bg {
+      background: linear-gradient(135deg, #2c2018 0%, #7a6455 50%, #b5a396 100%);
+    }
+
+    .work-card-overlay {
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(44,32,24,0.75) 0%, rgba(44,32,24,0.1) 60%, transparent 100%);
+    }
+
+    .work-card-content {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      padding: 40px;
+    }
+
+    .work-card-num {
+      font-size: 10px;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.5);
+      margin-bottom: 10px;
+    }
+
+    .work-card-title {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 40px;
+      font-weight: 300;
+      font-style: italic;
+      color: white;
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+
+    .work-card-count {
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: rgba(255,255,255,0.55);
+    }
+
+    .work-card-arrow {
+      position: absolute;
+      top: 36px; right: 36px;
+      width: 44px; height: 44px;
+      border: 1px solid rgba(255,255,255,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      font-size: 18px;
+      transform: rotate(-45deg);
+      transition: all 0.35s;
+      background: rgba(255,255,255,0.08);
+    }
+
+    .work-card:hover .work-card-arrow {
+      background: var(--rose);
+      border-color: var(--rose);
+      transform: rotate(0deg);
+    }
+
+    /* ABOUT STRIP */
+    .about-strip {
+      padding: 120px 8%;
+      background: var(--warm);
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 100px;
+      align-items: center;
+      border-top: 1px solid rgba(196,144,122,0.15);
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.9s ease;
+    }
+    .about-strip.show { opacity: 1; transform: none; }
+
+    .about-strip-text h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(38px, 4vw, 58px);
+      font-weight: 300;
+      font-style: italic;
+      margin-bottom: 24px;
+      line-height: 1.1;
+    }
+
+    .about-strip-text p {
+      color: var(--mid);
+      line-height: 1.9;
+      font-size: 15px;
+      margin-bottom: 36px;
+    }
+
+    .about-strip-quote {
+      padding: 40px;
+      background: var(--deep);
+      border-radius: 6px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .about-strip-quote::before {
+      content: '"';
+      position: absolute;
+      top: -20px; left: 20px;
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 180px;
+      color: rgba(196,144,122,0.1);
+      line-height: 1;
+    }
+
+    .about-strip-quote blockquote {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 24px;
+      font-style: italic;
+      color: var(--parchment);
+      line-height: 1.7;
+      position: relative;
+      z-index: 1;
+    }
+
+    .about-strip-quote cite {
+      display: block;
+      margin-top: 20px;
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--rose);
+      font-style: normal;
+    }
+
+    /* CONTACT */
+    .contact-strip {
+      padding: 100px 8%;
+      text-align: center;
+      background: var(--deep);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .contact-strip::before {
+      content: 'Hello';
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 220px;
+      font-weight: 600;
+      font-style: italic;
+      color: transparent;
+      -webkit-text-stroke: 1px rgba(196,144,122,0.07);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .contact-strip h2 {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: clamp(38px,5vw,70px);
+      font-weight: 300;
+      font-style: italic;
+      color: var(--cream);
+      margin-bottom: 16px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .contact-strip p {
+      color: var(--mid);
+      font-size: 14px;
+      letter-spacing: 1px;
+      margin-bottom: 50px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .btn-contact {
+      display: inline-flex;
+      align-items: center;
+      gap: 14px;
+      padding: 18px 50px;
+      border: 1px solid rgba(196,144,122,0.4);
+      color: var(--cream);
+      text-decoration: none;
+      font-size: 11px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      border-radius: 2px;
+      position: relative;
+      z-index: 1;
+      overflow: hidden;
+      transition: color 0.4s;
+    }
+    .btn-contact::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: var(--rose);
+      transform: translateX(-100%);
+      transition: transform 0.45s cubic-bezier(0.25,0.46,0.45,0.94);
+    }
+    .btn-contact:hover { color: white; }
+    .btn-contact:hover::before { transform: translateX(0); }
+    .btn-contact span { position: relative; z-index: 1; }
+
+    footer {
+      background: var(--deep);
+      border-top: 1px solid rgba(196,144,122,0.1);
+      padding: 28px 8%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    footer p { font-size: 11px; letter-spacing: 2px; color: var(--mid); text-transform: uppercase; }
+    footer nav { gap: 24px; }
+    footer nav a { font-size: 10px; color: var(--mid); letter-spacing: 2px; }
+    footer nav a::after { display: none; }
+    footer nav a:hover { color: var(--rose); }
+
+    @keyframes up {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-right { display: none; }
+      .works-grid { grid-template-columns: 1fr; }
+      .about-strip { grid-template-columns: 1fr; gap: 50px; }
+      .stats-bar { gap: 40px; flex-wrap: wrap; }
+      footer { flex-direction: column; gap: 16px; }
+    }
+
+    @media (max-width: 600px) {
+      header { padding: 18px 5%; }
+      .hero { padding: 110px 5% 70px; }
+      .works-section, .about-strip { padding: 90px 5%; }
+    }
+  </style>
+</head>
+<body>
+
+<header id="hdr">
+  <div class="logo">Creative <span>Works</span></div>
+  <nav>
+    <a href="drawings.html">Drawings</a>
+    <a href="sketches.html">Sketches</a>
+    <a href="#about">About</a>
+    <a href="#contact">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-ghost">Art</div>
+
+  <div class="hero-left">
+    <div class="hero-tag"></div>
+    <h1>Where Art<br><em>finds peace.</em></h1>
+    <p class="hero-desc">A handcrafted collection of drawings and sketches by Akshara — made with love, curiosity, and a whole lot of heart.</p>
+    <div class="hero-ctas">
+      <a href="drawings.html" class="btn-primary">View Drawings</a>
+      <a href="sketches.html" class="btn-ghost">See Sketches</a>
+    </div>
+  </div>
+
+  <div class="hero-right">
+    <div class="hero-images">
+      <div class="hero-img-card">
+        <img src="images/drawing1.jpg" alt="Featured drawing" style="min-height:300px; background:#e8d5c4;">
+      </div>
+      <div class="hero-img-card">
+        <img src="images/sketch1.jpg" alt="Featured sketch" style="min-height:140px; background:#d8c6b8;">
+      </div>
+      <div class="hero-img-card">
+        <img src="images/drawing2.jpg" alt="Featured drawing 2" style="min-height:140px; background:#c4b0a4;">
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-num">19</div>
+    <div class="stat-label">Drawings</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-num">16</div>
+    <div class="stat-label">Sketches</div>
+  </div>
+  <div class="stat-divider"></div>
+  <div class="stat">
+    <div class="stat-num">∞</div>
+    <div class="stat-label">Ideas</div>
+  </div>
+</div>
+
+<section class="works-section" id="works">
+  <div class="section-tag">
+    <span>Explore</span>
+    <h2>Collections</h2>
+    <div class="tag-line"></div>
+  </div>
+
+  <div class="works-grid">
+    <a href="drawings.html" class="work-card work-card-drawings">
+      <div class="work-card-bg"></div>
+      <div class="work-card-overlay"></div>
+      <div class="work-card-content">
+        <div class="work-card-num">Collection 01</div>
+        <div class="work-card-title">Drawings</div>
+        <div class="work-card-count">19 pieces</div>
+      </div>
+      <div class="work-card-arrow">→</div>
+    </a>
+
+    <a href="sketches.html" class="work-card work-card-sketches">
+      <div class="work-card-bg"></div>
+      <div class="work-card-overlay"></div>
+      <div class="work-card-content">
+        <div class="work-card-num">Collection 02</div>
+        <div class="work-card-title">Sketches</div>
+        <div class="work-card-count">16 pieces</div>
+      </div>
+      <div class="work-card-arrow">→</div>
+    </a>
+  </div>
+</section>
+
+<section class="about-strip" id="about">
+  <div class="about-strip-text">
+    <h2>Hey, I'm<br>Akshara.</h2>
+    <p>I love art and craft with my whole heart. There's something in the act of creating that gives me peace I can't find anywhere else. I love trying new things, experimenting with ideas — and I'm not always good at it, but that's never stopped me. Because I love it.</p>
+    <a href="#contact" class="btn-primary" style="display:inline-block;">Get in Touch</a>
+  </div>
+  <div class="about-strip-quote">
+    <blockquote>
+      "I'm not good at it — but I love it. And that, for me, is more than enough."
+    </blockquote>
+    <cite>— Akshara</cite>
+  </div>
+</section>
+
+<section class="contact-strip" id="contact">
+  <h2>Let's Connect</h2>
+  <p>Got something to say? I'd love to hear from you.</p>
+  <a href="mailto:aksharachoudhari08@email.com" class="btn-contact">
+    <span>✉ &nbsp; Email Me</span>
+  </a>
+</section>
+
+<footer>
+  <p>© 2026 Creative Works — Akshara</p>
+  <nav>
+    <a href="drawings.html">Drawings</a>
+    <a href="sketches.html">Sketches</a>
+    <a href="mailto:aksharachoudhari08@email.com">Contact</a>
+  </nav>
+</footer>
+
+<script>
+  const hdr = document.getElementById('hdr');
+  window.addEventListener('scroll', () => {
+    hdr.classList.toggle('scrolled', window.scrollY > 50);
+  });
+
+  const reveals = document.querySelectorAll('.works-section, .about-strip');
+  function reveal() {
+    reveals.forEach(el => {
+      if (el.getBoundingClientRect().top < window.innerHeight - 80) el.classList.add('show');
+    });
+  }
+  window.addEventListener('scroll', reveal);
+  reveal();
+</script>
+</body>
+</html>
